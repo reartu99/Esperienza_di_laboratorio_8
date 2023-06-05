@@ -15,7 +15,7 @@ def media_varianza(arr):
     devianza = 0
 
     for item in arr:  # Questa riga fa la media aritmetica
-        med = med + item
+        med = float(med) + float(item)
     med = med / len(arr)
     print("La media è: ", med)
 
@@ -59,9 +59,7 @@ def poisson_attesa(nprov, nbinor, orarr):
     mu = nprov/nbinor
     k = range(0, len(set(orarr)))
     pmf = []
-    print(len(set(orarr)))
 
-    print(k)
     for item in k:
         pmfi = decimal.Decimal((math.e**(-mu)*mu**k[item]))/(decimal.Decimal(math.factorial(k[item])))*decimal.Decimal(nbinor)
         pmf.append(pmfi)
@@ -92,15 +90,24 @@ def poissonconfronto(a, b, newlen):
     plt.show()
 
 
-events = 1000  # Numero di eventi generati
+events = 100  # Numero di eventi generati
 nbins = 200   # Numero di bins
 minimo = 0
 massimo = 10
 Dx = massimo/nbins
 
 slist = genera_numeri(minimo, massimo, events)
+
 aarray, barray, carray = distribuzione_uniforme(slist, minimo, massimo, Dx)
-array1 = poisson(aarray, minimo)
+print("La media e la varianza della uniforme")
+media_varianza(aarray)
+
+array1, barray1, carray1 = poisson(aarray, minimo)
+print("La media e la varianza della poisson ottenuta")
+media_varianza(array1)
+
 array2, newlen2 = poisson_attesa(events, nbins, slist)
+print("La media e la varianza della poisson attesa")
+media_varianza(array2)
 
 poissonconfronto(aarray, array2, newlen2)
