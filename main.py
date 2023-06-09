@@ -2,10 +2,6 @@ import random
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-import decimal
-
-
-decimal.getcontext().prec = 10000000000
 
 
 # Questa funzione ritorna media e variaza su una list di valori
@@ -45,6 +41,8 @@ def poisson(lista):
 def poisson_attesa(nprov, nbinor, orarr):
     mu = nprov/nbinor
     pmf = []
+    #  nbinor è il numero di bin originale, nprov sono gli eventi
+    #  orarr è l'array originale
 
     for item in orarr:
         pmfi = np.exp(-mu)*(mu**item)/math.factorial(int(item))
@@ -76,12 +74,13 @@ aarray, barray, carray = distribuzione_uniforme(slist, minimo, massimo, Dx)
 print("La media e la varianza della uniforme")
 media_varianza(slist)
 
-array1, barray1, carray1 = poisson(aarray)
+array1, bins1, carray1 = poisson(aarray)
 print("La media e la varianza della poisson ottenuta")
 media_varianza(aarray)
 
-poisson_attesa(events, nbins, barray1)
+poisson_attesa(events, nbins, bins1)
 print("La media e la varianza della poisson attesa")
-media_varianza(array1)
+media_varianza(bins1)
+print("array1 vale: ", bins1)
 
 #  poissonconfronto(aarray, array2, newlen2)
