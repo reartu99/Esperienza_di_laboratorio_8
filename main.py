@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import decimal
 
 
-decimal.getcontext().prec = 1000000
+decimal.getcontext().prec = 10000000000
 
 # Questa funzione ritorna media e variaza su una list di valori
 
@@ -22,7 +22,7 @@ def media_varianza(arr):
     for item in arr:
         devianza = devianza + ((item - med) ** 2)
 
-    varianza = devianza / len(arr)
+    varianza = np.sqrt(devianza / len(arr))
     print("La varianza è: ", varianza)
     return med, varianza
 
@@ -46,8 +46,8 @@ def distribuzione_uniforme(lista, minimum, maximum, passo):
     return a, b, c
 
 
-def poisson(lista, minimum):
-    a, b, c = plt.hist(lista, bins=np.arange(minimum, len(set(lista)) + 1))
+def poisson(lista):
+    a, b, c = plt.hist(lista, bins = int((lista.max()-lista.min()))) #  , bins=np.arange(minimum, len(set(lista)) + 1))
     plt.title("Poissoniana valori ottenuti")
     plt.savefig("Poissoniana ottenuta.png")
     plt.show()
@@ -57,30 +57,18 @@ def poisson(lista, minimum):
 
 def poisson_attesa(nprov, nbinor, orarr):
     mu = nprov/nbinor
-    k = range(0, len(set(orarr)))
     pmf = []
 
-    for item in k:
-        pmfi = decimal.Decimal((math.e**(-mu)*mu**k[item]))/(decimal.Decimal(math.factorial(k[item])))*decimal.Decimal(nbinor)
-        pmf.append(pmfi)
+    for item in orarr:
+        pmfi = np.exp(-mu)*(mu**item)/math.factorial(int(item))
+        pmf.append(pmfi*nbinor)
 
-    arraystr = []
-    h = 0
-
-    for item in pmf:
-        for x in range(math.floor(item)):
-            arraystr.append(h)
-        h = h + 1
-
-    plt.hist(arraystr, bins=np.arange(0, len(set(arraystr)) + 1))
+    plt.bar(orarr, pmf, label = 'osservato')
     plt.title("Poissoniana valori attesi")
     plt.savefig("Poissoniana attesa.png")
     plt.show()
 
-    lens = int(len(set(arraystr)))
-
-    return arraystr, lens
-
+#  Prova
 
 def poissonconfronto(a, b, newlen):
     plt.hist([a, b], bins=np.arange(0, newlen + 1), label=["Osservata", "Attesa"])
@@ -90,7 +78,7 @@ def poissonconfronto(a, b, newlen):
     plt.show()
 
 
-events = 100  # Numero di eventi generati
+events = 10000  # Numero di eventi generati
 nbins = 200   # Numero di bins
 minimo = 0
 massimo = 10
@@ -100,14 +88,14 @@ slist = genera_numeri(minimo, massimo, events)
 
 aarray, barray, carray = distribuzione_uniforme(slist, minimo, massimo, Dx)
 print("La media e la varianza della uniforme")
+media_varianza(slist)
+
+array1, barray1, carray1 = poisson(aarray)
+print("La media e la varianza della poisson ottenuta")
 media_varianza(aarray)
 
-array1, barray1, carray1 = poisson(aarray, minimo)
-print("La media e la varianza della poisson ottenuta")
+poisson_attesa(events, nbins, barray1)
+print("La media e la varianza della poisson attesa")
 media_varianza(array1)
 
-array2, newlen2 = poisson_attesa(events, nbins, slist)
-print("La media e la varianza della poisson attesa")
-media_varianza(array2)
-
-poissonconfronto(aarray, array2, newlen2)
+#  poissonconfronto(aarray, array2, newlen2)
