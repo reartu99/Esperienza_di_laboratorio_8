@@ -7,24 +7,11 @@ import decimal
 
 decimal.getcontext().prec = 10000000000
 
+
 # Questa funzione ritorna media e variaza su una list di valori
-
-
 def media_varianza(arr):
-    med = 0
-    devianza = 0
-
-    for item in arr:  # Questa riga fa la media aritmetica
-        med = float(med) + float(item)
-    med = med / len(arr)
-    print("La media è: ", med)
-
-    for item in arr:
-        devianza = devianza + ((item - med) ** 2)
-
-    varianza = np.sqrt(devianza / len(arr))
-    print("La varianza è: ", varianza)
-    return med, varianza
+    print("La media è: ", np.mean(arr))
+    print("La varianza è: ", np.var(arr))
 
 
 #  Questa funzione genera n numeri uniformi tra un massimo ed un minimo, ritorna una list
@@ -47,7 +34,7 @@ def distribuzione_uniforme(lista, minimum, maximum, passo):
 
 
 def poisson(lista):
-    a, b, c = plt.hist(lista, bins = int((lista.max()-lista.min()))) #  , bins=np.arange(minimum, len(set(lista)) + 1))
+    a, b, c = plt.hist(lista, bins=int((lista.max()-lista.min())))
     plt.title("Poissoniana valori ottenuti")
     plt.savefig("Poissoniana ottenuta.png")
     plt.show()
@@ -63,12 +50,11 @@ def poisson_attesa(nprov, nbinor, orarr):
         pmfi = np.exp(-mu)*(mu**item)/math.factorial(int(item))
         pmf.append(pmfi*nbinor)
 
-    plt.bar(orarr, pmf, label = 'osservato')
+    plt.bar(orarr, pmf, label='osservato')
     plt.title("Poissoniana valori attesi")
     plt.savefig("Poissoniana attesa.png")
     plt.show()
 
-#  Prova
 
 def poissonconfronto(a, b, newlen):
     plt.hist([a, b], bins=np.arange(0, newlen + 1), label=["Osservata", "Attesa"])
