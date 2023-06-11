@@ -2,29 +2,12 @@ import random
 import numpy as np
 import math
 import matplotlib.pyplot as plt
-import decimal
 
-
-decimal.getcontext().prec = 1000000
 
 # Questa funzione ritorna media e variaza su una list di valori
-
-
 def media_varianza(arr):
-    med = 0
-    devianza = 0
-
-    for item in arr:  # Questa riga fa la media aritmetica
-        med = float(med) + float(item)
-    med = med / len(arr)
-    print("La media è: ", med)
-
-    for item in arr:
-        devianza = devianza + ((item - med) ** 2)
-
-    varianza = devianza / len(arr)
-    print("La varianza è: ", varianza)
-    return med, varianza
+    print("La media è: ", np.mean(arr))
+    print("La varianza è: ", np.var(arr))
 
 
 #  Questa funzione genera n numeri uniformi tra un massimo ed un minimo, ritorna una list
@@ -46,68 +29,74 @@ def distribuzione_uniforme(lista, minimum, maximum, passo):
     return a, b, c
 
 
-def poisson(lista, minimum):
-    a, b, c = plt.hist(lista, bins=np.arange(minimum, len(set(lista)) + 1))
+def poisson(lista):
+    a, b, c = plt.hist(lista, bins=int((lista.max()-lista.min())))
     plt.title("Poissoniana valori ottenuti")
     plt.savefig("Poissoniana ottenuta.png")
     plt.show()
+    partenza = lista.min()
+    arrivo = lista.max()
 
-    return a, b, c
+    return a, b, partenza, arrivo
 
 
 def poisson_attesa(nprov, nbinor, orarr):
     mu = nprov/nbinor
-    k = range(0, len(set(orarr)))
     pmf = []
+    #  nbinor è il numero di bin originale, nprov sono gli eventi
+    #  orarr è l'array originale
 
-    for item in k:
-        pmfi = decimal.Decimal((math.e**(-mu)*mu**k[item]))/(decimal.Decimal(math.factorial(k[item])))*decimal.Decimal(nbinor)
-        pmf.append(pmfi)
+    for item in orarr:
+        pmfi = np.exp(-mu)*(mu**item)/math.factorial(int(item))
+        pmf.append(pmfi*nbinor)
 
-    arraystr = []
-    h = 0
-
-    for item in pmf:
-        for x in range(math.floor(item)):
-            arraystr.append(h)
-        h = h + 1
-
-    plt.hist(arraystr, bins=np.arange(0, len(set(arraystr)) + 1))
+    plt.bar(orarr, pmf, label='osservato', color='orange')
     plt.title("Poissoniana valori attesi")
     plt.savefig("Poissoniana attesa.png")
     plt.show()
 
-    lens = int(len(set(arraystr)))
-
-    return arraystr, lens
+    return pmf
 
 
-def poissonconfronto(a, b, newlen):
-    plt.hist([a, b], bins=np.arange(0, newlen + 1), label=["Osservata", "Attesa"])
-    plt.title("Distribuzioni attese e ottenute a confronto")
-    plt.savefig("Distribuzioni attese e ottenute a confronto.png")
-    plt.legend(prop={'size': 10})
+def poissonconfronto(a, pmf, range1, range2):
+    plt.bar(range1, a, label='valori ottenuti')
+    plt.bar(range2, pmf, alpha=0.4, label='valori attesi')
+    plt.title("Poissoniane valori attesi e valori ottenuti a confronto")
+    plt.legend()
+    plt.savefig("Poissoniane vs.png")
     plt.show()
 
 
-events = 100  # Numero di eventi generati
-nbins = 200   # Numero di bins
+events = 10000  # Numero di eventi generati
+nbins = 85   # Numero di bins, dovrebbe essere 50 per quello che vogliamo fare ma 85 è il minimo
 minimo = 0
 massimo = 10
 Dx = massimo/nbins
+
+print("Il numero di eventi é: ", events)
+print("Il numero di bins é: ", nbins)
+print("Gli eventi generati vanno da ", minimo, " a ", massimo)
+print("Il passo è quindi dato da massimo/numero di bin cioè: ", Dx)
+print("")
+print("")
 
 slist = genera_numeri(minimo, massimo, events)
 
 aarray, barray, carray = distribuzione_uniforme(slist, minimo, massimo, Dx)
 print("La media e la varianza della uniforme")
-media_varianza(aarray)
+media_varianza(slist)
+print("")
 
-array1, barray1, carray1 = poisson(aarray, minimo)
+array1, bins1, partenza1, arrivo1 = poisson(aarray)
 print("La media e la varianza della poisson ottenuta")
-media_varianza(array1)
+media_varianza(aarray)
+print("")
 
-array2, newlen2 = poisson_attesa(events, nbins, slist)
+pmf1 = poisson_attesa(events, nbins, bins1)
 print("La media e la varianza della poisson attesa")
-media_varianza(array2)
+media_varianza(bins1)
+print("")
 
-poissonconfronto(aarray, array2, newlen2)
+
+ranges1 = np.arange(partenza1, arrivo1, 1)
+poissonconfronto(array1, pmf1, ranges1, bins1)
