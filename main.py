@@ -50,7 +50,7 @@ def poisson_attesa(nprov, nbinor, orarr):
         pmfi = np.exp(-mu)*(mu**item)/math.factorial(int(item))
         pmf.append(pmfi*nbinor)
 
-    plt.bar(orarr, pmf, label='osservato')
+    plt.bar(orarr, pmf, label='osservato', color='orange')
     plt.title("Poissoniana valori attesi")
     plt.savefig("Poissoniana attesa.png")
     plt.show()
@@ -59,8 +59,11 @@ def poisson_attesa(nprov, nbinor, orarr):
 
 
 def poissonconfronto(a, pmf, range1, range2):
-    plt.bar(range1, a)
-    plt.bar(range2, pmf, alpha=0.4)
+    plt.bar(range1, a, label='valori ottenuti')
+    plt.bar(range2, pmf, alpha=0.4, label='valori attesi')
+    plt.title("Poissoniane valori attesi e valori ottenuti a confronto")
+    plt.legend()
+    plt.savefig("Poissoniane vs.png")
     plt.show()
 
 
