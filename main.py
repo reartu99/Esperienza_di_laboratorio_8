@@ -34,8 +34,10 @@ def poisson(lista):
     plt.title("Poissoniana valori ottenuti")
     plt.savefig("Poissoniana ottenuta.png")
     plt.show()
+    partenza = lista.min()
+    arrivo = lista.max()
 
-    return a, b, c
+    return a, b, partenza, arrivo
 
 
 def poisson_attesa(nprov, nbinor, orarr):
@@ -53,12 +55,12 @@ def poisson_attesa(nprov, nbinor, orarr):
     plt.savefig("Poissoniana attesa.png")
     plt.show()
 
+    return pmf
 
-def poissonconfronto(a, b, newlen):
-    plt.hist([a, b], bins=np.arange(0, newlen + 1), label=["Osservata", "Attesa"])
-    plt.title("Distribuzioni attese e ottenute a confronto")
-    plt.savefig("Distribuzioni attese e ottenute a confronto.png")
-    plt.legend(prop={'size': 10})
+
+def poissonconfronto(a, pmf, range1, range2):
+    plt.bar(range1, a)
+    plt.bar(range2, pmf, alpha=0.4)
     plt.show()
 
 
@@ -68,19 +70,30 @@ minimo = 0
 massimo = 10
 Dx = massimo/nbins
 
+print("Il numero di eventi é: ", events)
+print("Il numero di bins é: ", nbins)
+print("Gli eventi generati vanno da ", minimo, " a ", massimo)
+print("Il passo è quindi dato da massimo/numero di bin cioè: ", Dx)
+print("")
+print("")
+
 slist = genera_numeri(minimo, massimo, events)
 
 aarray, barray, carray = distribuzione_uniforme(slist, minimo, massimo, Dx)
 print("La media e la varianza della uniforme")
 media_varianza(slist)
+print("")
 
-array1, bins1, carray1 = poisson(aarray)
+array1, bins1, partenza1, arrivo1 = poisson(aarray)
 print("La media e la varianza della poisson ottenuta")
 media_varianza(aarray)
+print("")
 
-poisson_attesa(events, nbins, bins1)
+pmf1 = poisson_attesa(events, nbins, bins1)
 print("La media e la varianza della poisson attesa")
 media_varianza(bins1)
-print("array1 vale: ", bins1)
+print("")
 
-#  poissonconfronto(aarray, array2, newlen2)
+
+ranges1 = np.arange(partenza1, arrivo1, 1)
+poissonconfronto(array1, pmf1, ranges1, bins1)
