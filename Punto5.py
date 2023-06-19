@@ -63,17 +63,6 @@ def uniforme01(arrunifo, nbins):
     print("")
 
 
-def uniformeab(a, b, arrunifo, arrunifoab, nbins, listiniziale):
-    for k in listiniziale:
-        arrunifoab.append(k * (b - a) + a)
-    print("Uniforme tra a e b")
-    plt.hist(arrunifo, range=(0, max(arrunifo)), bins=nbins)
-    plt.title("Distribuzione uniforme tra a e b")
-    plt.savefig("x Distribuzione uniforme ab.png")
-    plt.show()
-    media_varianza(arrunifoab)
-
-
 def esponenziale(arresp, listiniziale, nbins):
     for h in listiniziale:
         arresp.append((-1 / 0.3103) * math.log(1 - h, math.e))
@@ -156,8 +145,6 @@ for item in mylist:
 
 
 uniforme01(arrUnifo, nbins1)
-
-#  uniformeab(0, 30, arrUnifo, arrUnifo2, nbins1, mylist)
 
 esponenziale(arrEsp, mylist, nbins1)
 
