@@ -68,7 +68,7 @@ def poissonconfronto(a, pmf, range1, range2):
 
 
 events = 10000  # Numero di eventi generati
-nbins = 85   # Numero di bins, dovrebbe essere 50 per quello che vogliamo fare ma 85 è il minimo
+nbins = 85   # Numero di bins
 minimo = 0
 massimo = 10
 Dx = massimo/nbins
