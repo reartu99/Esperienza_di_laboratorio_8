@@ -107,7 +107,6 @@ def lorentiana(arrlor, tau, listainiziale, nbins):
     print("")
 
 
-#  Genera gaussianna con metodo boxer ma solo unifoorme cioè tra 0,1 sono i numeri usciti
 def gaussiana(siz):
     h = np.random.uniform(size=siz)
     k = np.random.uniform(size=siz)
